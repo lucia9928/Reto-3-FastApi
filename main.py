@@ -22,9 +22,11 @@ USERNAME_RE = re.compile(r"^[A-Za-z0-9_]+$")
 
 class UsuarioIn(BaseModel):
  username: str
- email: str =Field(min_legth=6 , max_legth=120)
+ email: EmailStr =Field(min_legth=6 , max_legth=120)
  password: str = Field( min_legth=8, max_legth=64)
  edad: int = Field( gt=0, ge=120)
+ newsleter: bool = False
+
 @field_validator("username")
 @classmethod
 def validar_username(cls, v: str) -> str:
@@ -33,30 +35,33 @@ def validar_username(cls, v: str) -> str:
       raise ValueError("username solo puede contener letras, números y '_'")
     return v
 
+
 @field_validator("password")
 @classmethod
 def validar_password(cls, v: str) -> str:
     # r"..." indica una raw string (evita tener que escapar barras).
     if not re.search(r"[A-Z]", v):
         return v
+
 # TO DO
 # Completar las validaciones de contraseña:
 # "Debe contener al menos una mayúscula"
 # "Debe contener al menos una minúscula"
 # "Debe contener al menos un número"
 
-
-
-
 class UsuarioOut(BaseModel):
-  # TODO
-  pass
+  id:int
+  username:str
+  email:EmailStr
+  edad:int
+  newsleter:bool =False
+
 
 
 class UsuarioUpdateIn(BaseModel):
-  # TODO
-  pass
-
+  email:EmailStr
+  edad: int
+  newsleter: bool = False
 
 class ProductoIn(BaseModel):
     # TODO
