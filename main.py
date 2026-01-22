@@ -25,8 +25,6 @@ class UsuarioIn(BaseModel):
  email: str =Field(min_legth=6 , max_legth=120)
  password: str = Field( min_legth=8, max_legth=64)
  edad: int = Field( gt=0, ge=120)
- newsletter:bool= False
-
 @field_validator("username")
 @classmethod
 def validar_username(cls, v: str) -> str:
@@ -51,11 +49,7 @@ def validar_password(cls, v: str) -> str:
 
 
 class UsuarioOut(BaseModel):
-  id: int
-  username: str
-  email: str
-  edad: int = Field( gt=0, ge=120)
-  newsletter: bool = False
+  # TODO
   pass
 
 
