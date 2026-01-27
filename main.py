@@ -23,7 +23,7 @@ class UsuarioIn(BaseModel):
  username: str
  email: EmailStr =Field(min_legth=6 , max_legth=120)
  password: str = Field( min_legth=8, max_legth=64)
- edad: int = Field( gt=0, ge=120)
+ edad: int = Field( gt=0, le=120)
  newsleter: bool = False
 
 @field_validator("username")
@@ -95,24 +95,24 @@ class ProductoOut(BaseModel):
 # Endpoints Usuarios
 # ---------------------------
 
-@app.post("/usuario")
+@app.post("/usuario", status_code=201, response_model=UsuarioOut)
 def crear_usuario(usuario: UsuarioIn):
     global next_user_id
-
-    # TODO:
+    usuarios[next_user_id] = usuario.model_dump()
     # Guardar información de usuario en lista de usuarios (con id incremental)
+    user_out=UsuarioOut(id=next_user_id, **usuario.model_dump())
     # Devolver usuario (UsuarioOut)
-    pass
+    next_user_id +=1
+    return user_out
     #return user_out
 
 
 @app.get("/usuarios/{user_id}", response_model=UsuarioOut)
 def obtener_usuario(user_id: int = Path(..., ge=1)):
-    # TODO:
+
     pass
 
-
-@app.put("/usuarios/{user_id}", response_model=UsuarioOut)
+@app.put("/usuarios/{user_id}",status_code=200, response_model=UsuarioOut)
 def reemplazar_usuario(
     user_id: int = Path(..., ge=1),
     #payload: UsuarioUpdateIn
