@@ -1,6 +1,5 @@
 import re
 from typing import Optional, List
-
 from fastapi import FastAPI, HTTPException, Path, Query, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, EmailStr, field_validator
@@ -31,7 +30,6 @@ class UsuarioIn(BaseModel):
 @classmethod
 def validar_username(cls, v: str) -> str:
     if not USERNAME_RE.fullmatch(v):
-      v=" "
       raise ValueError("username solo puede contener letras, números y '_'")
     return v
 
@@ -64,8 +62,13 @@ class UsuarioUpdateIn(BaseModel):
   newsleter: bool = False
 
 class ProductoIn(BaseModel):
-    # TODO
-    pass
+    nombre: str =Field(min_legth=3 , max_legth=80)
+    precio: float= Field(gt=0)
+    stock: int =Field(ge=0)
+    categoria:str =Field(min_length=3, max_length=30)
+    tags:list =[]
+    activo:bool =False
+
 
     @field_validator("tags")
     @classmethod
@@ -77,17 +80,22 @@ class ProductoIn(BaseModel):
         # "Cada tag debe tener entre 2 y 20 caracteres"
 
         return v
-
 class ProductoOut(BaseModel):
-    # TODO
-    pass
+    id:int
+    nombre: str = Field(min_legth=3, max_legth=80)
+    precio: float = Field(gt=0)
+    stock: int = Field(ge=0)
+    categoria: str = Field(min_length=3, max_length=30)
+    tags: list =[]
+    activo: bool = False
+    valor_inventario:float
 
 
 # ---------------------------
 # Endpoints Usuarios
 # ---------------------------
 
-# TODO: indicar endpoint de creación de usuario aquí
+@app.post("/usuario")
 def crear_usuario(usuario: UsuarioIn):
     global next_user_id
 
